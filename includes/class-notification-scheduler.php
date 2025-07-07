@@ -11,6 +11,7 @@ class Notification_Scheduler {
         add_action('wp_footer', array($this, 'render_popup'));
         add_action('wp_ajax_ns_save_settings', array($this, 'save_settings'));
         add_action('wp_ajax_nopriv_ns_save_settings', array($this, 'save_settings'));
+        add_filter('pre_update_option_ns_settings', array($this, 'normalize_variable_keys'), 10, 2);
     }
     
     /**
@@ -270,5 +271,24 @@ class Notification_Scheduler {
         update_option('ns_settings', $settings);
         
         wp_send_json_success('Settings saved successfully');
+    }
+    
+    /**
+     * Normalize variable keys to use the user-entered variable name
+     */
+    public function normalize_variable_keys($new_value, $old_value) {
+        if (!isset($new_value['variables']) || !is_array($new_value['variables'])) {
+            return $new_value;
+        }
+        $normalized = array();
+        foreach ($new_value['variables'] as $var) {
+            if (isset($var['name']) && $var['name'] !== '') {
+                $key = trim($var['name']);
+                $normalized[$key] = $var;
+                $normalized[$key]['name'] = $key; // Ensure name matches key
+            }
+        }
+        $new_value['variables'] = $normalized;
+        return $new_value;
     }
 } 

@@ -28,7 +28,6 @@ add_action('plugins_loaded', 'ns_init');
 // Activation hook
 register_activation_hook(__FILE__, 'ns_activate');
 function ns_activate() {
-    // Set default options
     $default_options = array(
         'interval' => 30,
         'text_template' => 'Someone from {city} just purchased {product}',
