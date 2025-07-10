@@ -255,7 +255,6 @@ This plugin is licensed under the GPL v2 or later.
 - Added text formatting: `*bold*` and `_italic_` supported in notification templates
 - Improved WooCommerce template: custom variables can be used alongside product variables
 - Added (documented) support for popup position (left/right) and effect (fade/slide)
-- Improved documentation and usage examples
 
 ### Version 1.0.0
 - Initial release
