@@ -11,6 +11,7 @@ A multipurpose WordPress plugin that displays customizable notifications with fl
 - **Responsive Design**: Works on desktop and mobile devices
 - **Admin Settings**: Easy-to-use WordPress admin interface for configuration
 - **Multipurpose**: Use for product notifications, social proof, announcements, etc.
+- **WooCommerce Integration**: Use WooCommerce product data in notifications
 
 ## Installation
 
@@ -24,6 +25,7 @@ A multipurpose WordPress plugin that displays customizable notifications with fl
 
 - **Interval**: Set the delay in seconds before showing the first popup (default: 30 seconds)
 - **Text Template**: Use `{variable_name}` as placeholders for variables (default: "Someone from {city} just purchased {product}")
+- **Template**: Choose between "Custom" and "WooCommerce Product Notification"
 
 ### Variables
 
@@ -33,6 +35,7 @@ Add multiple variables with the following types:
 - **Text**: Single text value
 - **Number**: Random number between 1-100
 - **Range**: Custom number range (e.g., "5-15" for random number between 5 and 15)
+- **Image URL**: (Optional) Show a custom image for a variable
 
 ## Variable Types
 
@@ -58,9 +61,12 @@ Specify custom ranges:
 1-10    // Random number between 1 and 10
 ```
 
+### Image URL
+If provided, this image will be shown in the popup for this variable. If not, a default icon is shown.
+
 ## Usage Examples
 
-### Product Notifications
+### Product Notifications (Custom Template)
 **Text Template**: `"Someone from {city} just purchased {product} for ${price}"`
 
 **Variables**:
@@ -71,10 +77,10 @@ Specify custom ranges:
 **Result**: "Someone from Miami just purchased Super Gadget for $49"
 
 ### Social Proof
-**Text Template**: `"{name} from {city} just left a {rating}-star review!"`
+**Text Template**: `"{buyer} from {city} just left a {rating}-star review!"`
 
 **Variables**:
-- `name`: `Sarah|Mike|Emma|John|Lisa`
+- `buyer`: `Sarah|Mike|Emma|John|Lisa`
 - `city`: `New York|Los Angeles|Chicago`
 - `rating`: `4|5`
 
@@ -87,6 +93,43 @@ Specify custom ranges:
 - `time`: `5-15`
 
 **Result**: "Ordered 12 minutes ago"
+
+---
+
+## WooCommerce Product Notification Template
+
+When you select the **WooCommerce Product Notification** template, the plugin will use your WooCommerce products to populate notification variables. You can also use custom variables alongside WooCommerce variables.
+
+### Built-in WooCommerce Variables
+- `{product}`: Product name
+- `{price}`: Product price
+- `{image}`: Product image (used as the popup image)
+
+### Example Usage
+
+**Text Template:**
+```
+{buyer} from {city} just bought {product} for ${price}!
+```
+
+**Custom Variables:**
+- `buyer`: `Sarah|Mike|Emma|John|Lisa`
+- `city`: `New York|Los Angeles|Chicago|Miami|Seattle`
+
+**Result:**
+> "Emma from Miami just bought Awesome T-shirt for $29!"
+
+- `{product}` and `{price}` are filled from a random WooCommerce product.
+- `{buyer}` and `{city}` are filled from your custom variables.
+- `{image}` will show the product image in the popup. If not available, a default icon is shown.
+
+### How to Use
+1. In the plugin settings, select **WooCommerce Product Notification** as the template.
+2. Enter your desired text template using any combination of WooCommerce and custom variables.
+3. Add any custom variables you want (e.g., `buyer`, `city`).
+4. Save settings. The popup will now use both WooCommerce and custom variables.
+
+---
 
 ## File Structure
 
@@ -112,6 +155,7 @@ The plugin uses vanilla JavaScript to handle dynamic content:
 - **Variable Processing**: Processes different variable types (array, text, number, range)
 - **Template Engine**: Replaces `{variable_name}` placeholders with processed values
 - **Random Selection**: Randomly selects values from arrays and generates random numbers
+- **WooCommerce Integration**: Fetches product data and images for notifications
 - **Responsive Design**: CSS Grid and Flexbox for responsive layout
 
 ### Admin Interface
@@ -120,6 +164,7 @@ The plugin uses vanilla JavaScript to handle dynamic content:
 - **Dynamic Forms**: JavaScript-powered dynamic form fields for variables
 - **Data Validation**: Server-side validation for all settings
 - **Type-specific UI**: Different input fields based on variable type
+- **Template System**: Easily extensible for more notification templates
 
 ### Performance
 
@@ -145,22 +190,6 @@ You can customize the popup appearance by modifying `assets/css/popup.css`:
 }
 ```
 
-### JavaScript Customization
-
-The popup behavior can be customized by modifying `assets/js/popup.js`:
-
-```javascript
-// Custom timing
-this.showTimer = setTimeout(() => {
-    this.show();
-}, customDelay);
-
-// Custom variable processing
-processVariable(varName, varData) {
-    // Your custom logic
-}
-```
-
 ## Use Cases
 
 - **E-commerce**: Product purchase notifications
@@ -182,6 +211,7 @@ processVariable(varName, varData) {
 - WordPress 5.0 or higher
 - PHP 7.4 or higher
 - jQuery (included with WordPress)
+- WooCommerce (for WooCommerce template)
 
 ## Support
 
@@ -199,4 +229,5 @@ This plugin is licensed under the GPL v2 or later.
 - Flexible variable support (array, text, number, range)
 - Curly bracket variable processing
 - Admin settings interface
-- Responsive design 
+- Responsive design
+- WooCommerce product notification template 
