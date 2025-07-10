@@ -3,7 +3,8 @@
  * Plugin Name: Notification Scheduler
  * Description: A multipurpose plugin that displays product notifications with customizable intervals and text variables.
  * Version: 1.0.0
- * Author: Joseph
+ * Author: Jotweb Studio
+ * Author URI: https://jotwebstudio.com
  * License: GPL v2 or later
  */
 
@@ -78,14 +79,11 @@ function ns_get_all_woocommerce_products_for_js() {
 // Patch: Add WooCommerce products to JS if needed
 add_action('wp_enqueue_scripts', function() {
     $settings = get_option('ns_settings', array());
-	if(empty($_GET['notification'])) return;
-	// dd($_GET['notification']);
+	// if(empty($_GET['notification'])) return;
     if (isset($settings['template']) && $settings['template'] === 'woocommerce') {
-        wp_localize_script('ns-popup-script', 'nsSettings', array_merge(
-            array(
-                'woocommerce_products' => ns_get_all_woocommerce_products_for_js()
-            ),
-            array('settings' => $settings)
+        $settings['woocommerce_products'] = ns_get_all_woocommerce_products_for_js();
+        wp_localize_script('ns-popup-script', 'nsSettings', array(
+            'settings' => $settings
         ));
     }
-}, 20); 
+}, 20);

@@ -1,7 +1,5 @@
 <?php
-/**
- * Main plugin class
- */
+
 class Notification_Scheduler {
     
     public function __construct() {
@@ -55,7 +53,7 @@ class Notification_Scheduler {
         
         // Localize script with settings
         $settings = get_option('ns_settings', array());
-        if(empty($_GET['notification'])) return;
+        // if(empty($_GET['notification'])) return;
         wp_localize_script('ns-popup-script', 'nsSettings', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('ns_nonce'),
@@ -111,6 +109,22 @@ class Notification_Scheduler {
                     </tr>
                 </table>
                 <div id="ns-template-variables">
+                    <h2>Variables</h2>
+                    <div id="ns-variables">
+                        <?php
+                        $variables = $settings['variables'] ?? array();
+                        if (!empty($variables)) {
+                            foreach ($variables as $var_name => $var_data) {
+                                $this->render_variable_row($var_name, $var_data);
+                            }
+                        } else {
+                            $this->render_variable_row('city', array('type' => 'array', 'values' => 'New York|Los Angeles|Chicago', 'image' => ''));
+                        }
+                        ?>
+                    </div>
+                    <p>
+                        <button type="button" id="ns-add-variable" class="button">Add New Variable</button>
+                    </p>
                     <?php if ($template === 'woocommerce' && class_exists('WooCommerce')): ?>
                         <h2>WooCommerce Product Variables</h2>
                         <ul>
@@ -119,23 +133,6 @@ class Notification_Scheduler {
                             <li><strong>{image}</strong>: Product image</li>
                         </ul>
                         <p class="description">Products will be randomly selected from your WooCommerce catalog.</p>
-                    <?php else: ?>
-                        <h2>Variables</h2>
-                        <div id="ns-variables">
-                            <?php
-                            $variables = $settings['variables'] ?? array();
-                            if (!empty($variables)) {
-                                foreach ($variables as $var_name => $var_data) {
-                                    $this->render_variable_row($var_name, $var_data);
-                                }
-                            } else {
-                                $this->render_variable_row('city', array('type' => 'array', 'values' => 'New York|Los Angeles|Chicago', 'image' => ''));
-                            }
-                            ?>
-                        </div>
-                        <p>
-                            <button type="button" id="ns-add-variable" class="button">Add New Variable</button>
-                        </p>
                     <?php endif; ?>
                 </div>
                 <?php submit_button(); ?>
