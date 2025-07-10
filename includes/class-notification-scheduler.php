@@ -77,6 +77,8 @@ class Notification_Scheduler {
     public function admin_page() {
         $settings = get_option('ns_settings', array());
         $template = $settings['template'] ?? 'custom';
+        $position = $settings['position'] ?? 'left';
+        $effect = $settings['effect'] ?? 'fade';
         ?>
         <div class="wrap">
             <h1>Notification Scheduler Settings</h1>
@@ -105,6 +107,26 @@ class Notification_Scheduler {
                         <td>
                             <textarea name="ns_settings[text_template]" class="large-text" rows="3" id="ns-text-template"><?php echo esc_textarea($settings['text_template'] ?? 'Someone from {city} just purchased {product}'); ?></textarea>
                             <p class="description">Use {variable_name} as placeholders for variables. For WooCommerce: {product}, {price}, {image}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Popup Position</th>
+                        <td>
+                            <select name="ns_settings[position]">
+                                <option value="left" <?php selected($position, 'left'); ?>>Left</option>
+                                <option value="right" <?php selected($position, 'right'); ?>>Right</option>
+                            </select>
+                            <p class="description">Choose whether the popup appears on the left or right side of the screen.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Popup Effect</th>
+                        <td>
+                            <select name="ns_settings[effect]">
+                                <option value="fade" <?php selected($effect, 'fade'); ?>>Fade</option>
+                                <option value="slide" <?php selected($effect, 'slide'); ?>>Slide</option>
+                            </select>
+                            <p class="description">Choose the popup animation effect.</p>
                         </td>
                     </tr>
                 </table>

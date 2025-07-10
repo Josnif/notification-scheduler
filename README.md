@@ -12,6 +12,8 @@ A multipurpose WordPress plugin that displays customizable notifications with fl
 - **Admin Settings**: Easy-to-use WordPress admin interface for configuration
 - **Multipurpose**: Use for product notifications, social proof, announcements, etc.
 - **WooCommerce Integration**: Use WooCommerce product data in notifications
+- **Text Formatting**: Use `*bold*` and `_italic_` in your templates
+- **Popup Position & Effect**: Choose left or right position and popup animation effect (see below)
 
 ## Installation
 
@@ -26,6 +28,8 @@ A multipurpose WordPress plugin that displays customizable notifications with fl
 - **Interval**: Set the delay in seconds before showing the first popup (default: 30 seconds)
 - **Text Template**: Use `{variable_name}` as placeholders for variables (default: "Someone from {city} just purchased {product}")
 - **Template**: Choose between "Custom" and "WooCommerce Product Notification"
+- **Popup Position**: Choose whether the popup appears on the left or right side of the screen
+- **Popup Effect**: Choose the popup animation effect (e.g., fade, slide)
 
 ### Variables
 
@@ -63,6 +67,25 @@ Specify custom ranges:
 
 ### Image URL
 If provided, this image will be shown in the popup for this variable. If not, a default icon is shown.
+
+## Text Formatting
+
+You can use special formatting in your notification templates:
+- `*text*` or `*{variable}*` for **bold**
+- `_text_` or `_{variable}_` for *italic*
+
+Example:
+```
+*_{product}_* just bought by *{buyer}*!
+```
+
+## Popup Position & Effect
+
+You can configure the popup to appear on the left or right side of the screen, and choose the animation effect:
+- **Popup Position**: `Left` or `Right` (default: Left)
+- **Popup Effect**: `Fade` or `Slide` (default: Fade)
+
+---
 
 ## Usage Examples
 
@@ -109,7 +132,7 @@ When you select the **WooCommerce Product Notification** template, the plugin wi
 
 **Text Template:**
 ```
-{buyer} from {city} just bought {product} for ${price}!
+{buyer} from {city} just bought *{product}* for ${price}!
 ```
 
 **Custom Variables:**
@@ -156,6 +179,8 @@ The plugin uses vanilla JavaScript to handle dynamic content:
 - **Template Engine**: Replaces `{variable_name}` placeholders with processed values
 - **Random Selection**: Randomly selects values from arrays and generates random numbers
 - **WooCommerce Integration**: Fetches product data and images for notifications
+- **Text Formatting**: Supports *bold* and _italic_ formatting
+- **Popup Position & Effect**: Supports left/right position and fade/slide effects
 - **Responsive Design**: CSS Grid and Flexbox for responsive layout
 
 ### Admin Interface
@@ -165,6 +190,7 @@ The plugin uses vanilla JavaScript to handle dynamic content:
 - **Data Validation**: Server-side validation for all settings
 - **Type-specific UI**: Different input fields based on variable type
 - **Template System**: Easily extensible for more notification templates
+- **Popup Position & Effect**: Easily extensible for more effects and positions
 
 ### Performance
 
@@ -189,6 +215,8 @@ You can customize the popup appearance by modifying `assets/css/popup.css`:
     color: #your-icon-color;
 }
 ```
+
+---
 
 ## Use Cases
 
@@ -222,6 +250,12 @@ For support and feature requests, please create an issue in the plugin repositor
 This plugin is licensed under the GPL v2 or later.
 
 ## Changelog
+
+### Version 1.0.1
+- Added text formatting: `*bold*` and `_italic_` supported in notification templates
+- Improved WooCommerce template: custom variables can be used alongside product variables
+- Added (documented) support for popup position (left/right) and effect (fade/slide)
+- Improved documentation and usage examples
 
 ### Version 1.0.0
 - Initial release

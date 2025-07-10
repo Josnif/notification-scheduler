@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Notification Scheduler
  * Description: A multipurpose plugin that displays product notifications with customizable intervals and text variables.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Jotweb Studio
  * Author URI: https://jotwebstudio.com
  * License: GPL v2 or later

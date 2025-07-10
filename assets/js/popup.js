@@ -6,6 +6,8 @@
             this.settings = settings;
             this.variables = settings.variables || {};
             this.template = settings.template || 'custom';
+            this.position = settings.position || 'left';
+            this.effect = settings.effect || 'fade';
             this.isCardVisible = false;
             this.showTimer = null;
             this.hideTimer = null;
@@ -22,8 +24,9 @@
         createPopupHTML() {
             const container = $('#ns-popup-container');
             if (container.length === 0) return;
+            // Add position and effect classes
             container.html(`
-                <div id="ns-popup" class="ns-popup" style="display: none;">
+                <div id="ns-popup" class="ns-popup ns-popup-${this.position} ns-effect-${this.effect}" style="display: none;">
                     <button class="ns-close-btn" onclick="nsPopup.close()">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
@@ -83,6 +86,14 @@
             return null;
         }
         
+        formatText(text) {
+            // Bold: *text*
+            text = text.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+            // Italic: _text_
+            text = text.replace(/_([^_]+)_/g, '<em>$1</em>');
+            return text;
+        }
+        
         processTextTemplate(template, contextVars) {
             let processedText = template;
             const variableRegex = /\{([^}]+)\}/g;
@@ -97,6 +108,8 @@
                 }
                 processedText = processedText.replace(match[0], value);
             }
+            // Apply formatting for *bold* and _italic_
+            processedText = this.formatText(processedText);
             return processedText;
         }
         
@@ -128,8 +141,9 @@
             }
             // Process the text template with variables
             const processedText = this.processTextTemplate(textTemplate, contextVars);
+
             // Update content
-            popup.find('.ns-text').text(processedText);
+            popup.find('.ns-text').html(processedText);
             // Show image or default icon
             if (imageUrl) {
                 popup.find('.ns-image-or-icon').html(`<img src="${imageUrl}" alt="notification image" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">`);
@@ -140,14 +154,22 @@
                     </svg>
                 `);
             }
-            // Show popup
-            popup.fadeIn(300);
+            // Show popup with effect
+            if (this.effect === 'slide') {
+                popup.stop(true, true).css('display', 'block').hide().slideDown(300);
+            } else {
+                popup.fadeIn(300);
+            }
             this.isCardVisible = true;
         }
         
         hide() {
             const popup = $('#ns-popup');
-            popup.fadeOut(300);
+            if (this.effect === 'slide') {
+                popup.slideUp(300);
+            } else {
+                popup.fadeOut(300);
+            }
             this.isCardVisible = false;
         }
         
