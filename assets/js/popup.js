@@ -5,11 +5,12 @@
         constructor(settings) {
             this.settings = settings;
             this.variables = settings.variables || {};
+            this.template = settings.template || 'custom';
             this.isCardVisible = false;
             this.showTimer = null;
             this.hideTimer = null;
             this.waitTimer = null;
-            
+            this.woocommerceProducts = settings.woocommerce_products || [];
             this.init();
         }
         
@@ -21,7 +22,6 @@
         createPopupHTML() {
             const container = $('#ns-popup-container');
             if (container.length === 0) return;
-            
             container.html(`
                 <div id="ns-popup" class="ns-popup" style="display: none;">
                     <button class="ns-close-btn" onclick="nsPopup.close()">
@@ -30,11 +30,7 @@
                         </svg>
                     </button>
                     <div class="ns-icon-container">
-                        <div class="ns-icon">
-                            <svg width="35" height="35" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                        </div>
+                        <div class="ns-image-or-icon"></div>
                     </div>
                     <div class="ns-content">
                         <p class="ns-text"></p>
@@ -46,10 +42,8 @@
         managePopupCycle() {
             this.showTimer = setTimeout(() => {
                 this.show();
-                
                 this.hideTimer = setTimeout(() => {
                     this.hide();
-                    
                     this.waitTimer = setTimeout(() => {
                         this.managePopupCycle();
                     }, 20000 + Math.random() * 5000); // hide for 20-25 seconds
@@ -59,18 +53,14 @@
         
         processVariable(varName, varData) {
             const type = varData.type || 'text';
-            
             switch (type) {
                 case 'array':
                     const values = varData.values ? varData.values.split('|') : [];
                     return values.length > 0 ? values[Math.floor(Math.random() * values.length)].trim() : '';
-                    
                 case 'text':
                     return varData.values || '';
-                    
                 case 'number':
                     return Math.floor(Math.random() * 100) + 1;
-                    
                 case 'range':
                     if (varData.values) {
                         const range = varData.values.split('-');
@@ -81,42 +71,75 @@
                         }
                     }
                     return Math.floor(Math.random() * 100) + 1;
-                    
                 default:
                     return '';
             }
         }
         
-        processTextTemplate(template) {
+        getImageForVariable(varName, varData) {
+            if (varData && varData.image && varData.image.trim() !== '') {
+                return varData.image.trim();
+            }
+            return null;
+        }
+        
+        processTextTemplate(template, contextVars) {
             let processedText = template;
-            
-            // Find all variables in curly brackets
             const variableRegex = /\{([^}]+)\}/g;
             let match;
-            
             while ((match = variableRegex.exec(template)) !== null) {
                 const varName = match[1];
-                const varData = this.variables[varName];
-                
-                if (varData) {
-                    const value = this.processVariable(varName, varData);
-                    processedText = processedText.replace(match[0], value);
+                let value = '';
+                if (contextVars && contextVars[varName] !== undefined) {
+                    value = contextVars[varName];
+                } else if (this.variables[varName]) {
+                    value = this.processVariable(varName, this.variables[varName]);
                 }
+                processedText = processedText.replace(match[0], value);
             }
-            
             return processedText;
         }
         
         show() {
             const popup = $('#ns-popup');
-            const textTemplate = this.settings.text_template || 'Someone just purchased a product!';
-            
+            let textTemplate = this.settings.text_template || 'Someone just purchased a product!';
+            let imageUrl = null;
+            let contextVars = {};
+
+            if (this.template === 'woocommerce' && this.woocommerceProducts && this.woocommerceProducts.length > 0) {
+                // Pick a random product
+                const product = this.woocommerceProducts[Math.floor(Math.random() * this.woocommerceProducts.length)];
+                contextVars = {
+                    product: product.product,
+                    price: product.price,
+                    image: product.image
+                };
+                imageUrl = product.image;
+            } else {
+                // Try to find an image from variables
+                for (const varName in this.variables) {
+                    const varData = this.variables[varName];
+                    const img = this.getImageForVariable(varName, varData);
+                    if (img) {
+                        imageUrl = img;
+                        break;
+                    }
+                }
+            }
             // Process the text template with variables
-            const processedText = this.processTextTemplate(textTemplate);
-            
+            const processedText = this.processTextTemplate(textTemplate, contextVars);
             // Update content
             popup.find('.ns-text').text(processedText);
-            
+            // Show image or default icon
+            if (imageUrl) {
+                popup.find('.ns-image-or-icon').html(`<img src="${imageUrl}" alt="notification image" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">`);
+            } else {
+                popup.find('.ns-image-or-icon').html(`
+                    <svg width="35" height="35" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                `);
+            }
             // Show popup
             popup.fadeIn(300);
             this.isCardVisible = true;
@@ -130,11 +153,9 @@
         
         close() {
             this.hide();
-            // Clear timers and restart cycle
             clearTimeout(this.showTimer);
             clearTimeout(this.hideTimer);
             clearTimeout(this.waitTimer);
-            
             setTimeout(() => {
                 this.managePopupCycle();
             }, 20000 + Math.random() * 5000);
@@ -148,7 +169,6 @@
         }
     }
     
-    // Initialize popup when DOM is ready
     $(document).ready(function() {
         if (typeof nsSettings !== 'undefined' && nsSettings.settings) {
             window.nsPopup = new NotificationPopup(nsSettings.settings);

@@ -3,7 +3,8 @@
  * Plugin Name: Notification Scheduler
  * Description: A multipurpose plugin that displays product notifications with customizable intervals and text variables.
  * Version: 1.0.0
- * Author: Joseph
+ * Author: Jotweb Studio
+ * Author URI: https://jotwebstudio.com
  * License: GPL v2 or later
  */
 
@@ -50,4 +51,39 @@ function ns_activate() {
 register_deactivation_hook(__FILE__, 'ns_deactivate');
 function ns_deactivate() {
     // Clean up if needed
-} 
+}
+
+// Helper to get all WooCommerce products for JS
+function ns_get_all_woocommerce_products_for_js() {
+    if (!class_exists('WooCommerce')) return array();
+    $args = array(
+        'post_type' => 'product',
+        'posts_per_page' => 50,
+        'post_status' => 'publish',
+    );
+    $products = get_posts($args);
+    $result = array();
+    foreach ($products as $p) {
+        $product = wc_get_product($p->ID);
+        if ($product) {
+            $result[] = array(
+                'product' => $product->get_name(),
+                'price' => $product->get_price(),
+                'image' => get_the_post_thumbnail_url($product->get_id(), 'thumbnail'),
+            );
+        }
+    }
+    return $result;
+}
+
+// Patch: Add WooCommerce products to JS if needed
+add_action('wp_enqueue_scripts', function() {
+    $settings = get_option('ns_settings', array());
+	// if(empty($_GET['notification'])) return;
+    if (isset($settings['template']) && $settings['template'] === 'woocommerce') {
+        $settings['woocommerce_products'] = ns_get_all_woocommerce_products_for_js();
+        wp_localize_script('ns-popup-script', 'nsSettings', array(
+            'settings' => $settings
+        ));
+    }
+}, 20);
