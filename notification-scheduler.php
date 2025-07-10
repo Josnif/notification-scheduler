@@ -78,6 +78,8 @@ function ns_get_all_woocommerce_products_for_js() {
 // Patch: Add WooCommerce products to JS if needed
 add_action('wp_enqueue_scripts', function() {
     $settings = get_option('ns_settings', array());
+	if(empty($_GET['notification'])) return;
+	// dd($_GET['notification']);
     if (isset($settings['template']) && $settings['template'] === 'woocommerce') {
         wp_localize_script('ns-popup-script', 'nsSettings', array_merge(
             array(

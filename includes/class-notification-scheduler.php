@@ -55,6 +55,7 @@ class Notification_Scheduler {
         
         // Localize script with settings
         $settings = get_option('ns_settings', array());
+        if(empty($_GET['notification'])) return;
         wp_localize_script('ns-popup-script', 'nsSettings', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('ns_nonce'),
