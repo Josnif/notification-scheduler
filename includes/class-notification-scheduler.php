@@ -79,6 +79,7 @@ class Notification_Scheduler {
         $template = $settings['template'] ?? 'custom';
         $position = $settings['position'] ?? 'left';
         $effect = $settings['effect'] ?? 'fade';
+        $delay = $settings['delay'] ?? 0;
         ?>
         <div class="wrap">
             <h1>Notification Scheduler Settings</h1>
@@ -98,8 +99,15 @@ class Notification_Scheduler {
                     <tr>
                         <th scope="row">Interval (seconds)</th>
                         <td>
-                            <input type="number" name="ns_settings[interval]" value="<?php echo esc_attr($settings['interval'] ?? 30); ?>" min="10" max="300" />
-                            <p class="description">Delay before showing popup (in seconds)</p>
+                            <input type="number" name="ns_settings[interval]" value="<?php echo esc_attr($settings['interval'] ?? 30); ?>" min="10" max="600" />
+                            <p class="description">Time between popups (in seconds)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Delay (seconds)</th>
+                        <td>
+                            <input type="number" name="ns_settings[delay]" value="<?php echo esc_attr($delay); ?>" min="0" max="600" />
+                            <p class="description">Delay before the first popup appears (in seconds, default: 0)</p>
                         </td>
                     </tr>
                     <tr>

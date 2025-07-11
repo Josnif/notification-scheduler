@@ -8,6 +8,7 @@
             this.template = settings.template || 'custom';
             this.position = settings.position || 'left';
             this.effect = settings.effect || 'fade';
+            this.delay = typeof settings.delay !== 'undefined' ? parseInt(settings.delay) : 0;
             this.isCardVisible = false;
             this.showTimer = null;
             this.hideTimer = null;
@@ -18,7 +19,9 @@
         
         init() {
             this.createPopupHTML();
-            this.managePopupCycle();
+            setTimeout(() => {
+                this.managePopupCycle();
+            }, (this.delay || 0) * 1000);
         }
         
         createPopupHTML() {
@@ -43,15 +46,18 @@
         }
         
         managePopupCycle() {
-            this.showTimer = setTimeout(() => {
+            const interval = this.settings.interval || 30;
+            const displayTime = this.settings.display_time || 10; // Default to 10 seconds
+
+            setTimeout(() => {
                 this.show();
-                this.hideTimer = setTimeout(() => {
+                setTimeout(() => {
                     this.hide();
-                    this.waitTimer = setTimeout(() => {
+                    setTimeout(() => {
                         this.managePopupCycle();
-                    }, 20000 + Math.random() * 5000); // hide for 20-25 seconds
-                }, 20000 + Math.random() * 5000); // show for 20-25 seconds
-            }, (this.settings.interval || 30) * 1000); // base delay
+                    }, interval * 1000);
+                }, displayTime * 1000);
+            }, this.delay * 1000);
         }
         
         processVariable(varName, varData) {
