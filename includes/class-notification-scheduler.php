@@ -40,7 +40,7 @@ class Notification_Scheduler {
             'ns-popup-script',
             NS_PLUGIN_URL . 'assets/js/popup.js',
             array('jquery'),
-            '1.0.0',
+            '1.0.2',
             true
         );
         
@@ -48,7 +48,7 @@ class Notification_Scheduler {
             'ns-popup-style',
             NS_PLUGIN_URL . 'assets/css/popup.css',
             array(),
-            '1.0.0'
+            '1.0.2'
         );
         
         // Localize script with settings

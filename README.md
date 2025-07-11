@@ -251,6 +251,9 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Changelog
 
+### Version 1.0.2
+- Added delay to settings
+
 ### Version 1.0.1
 - Added text formatting: `*bold*` and `_italic_` supported in notification templates
 - Improved WooCommerce template: custom variables can be used alongside product variables
