@@ -40,22 +40,22 @@
 }
 
 .ns-close-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    color: #6b7280;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
+    position: absolute!important;
+    top: 0.5rem!important;
+    right: 0.5rem!important;
+    color: #6b7280!important;
+    background: none!important;
+    border: none!important;
+    cursor: pointer!important;
+    padding: 0!important;
+    display: flex!important;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease!important;
 }
 
 .ns-close-btn:hover {
-    color: #374151;
+    color: #374151!important;
 }
 
 .ns-icon-container {
