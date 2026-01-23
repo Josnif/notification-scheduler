@@ -251,6 +251,12 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Changelog
 
+### Version 1.0.3
+- Added enable/disable toggle at the top of settings page
+- Added live notification preview on settings page
+- Users can now disable notifications without deactivating the plugin
+- Preview shows real-time rendering of notification with current settings
+
 ### Version 1.0.2
 - Added delay to settings
 

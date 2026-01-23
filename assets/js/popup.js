@@ -199,7 +199,11 @@
     
     $(document).ready(function() {
         if (typeof nsSettings !== 'undefined' && nsSettings.settings) {
-            window.nsPopup = new NotificationPopup(nsSettings.settings);
+            // Check if notifications are enabled
+            const enabled = nsSettings.settings.enabled !== undefined ? nsSettings.settings.enabled : true;
+            if (enabled) {
+                window.nsPopup = new NotificationPopup(nsSettings.settings);
+            }
         }
     });
     
