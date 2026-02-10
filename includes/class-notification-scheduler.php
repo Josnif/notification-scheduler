@@ -48,7 +48,7 @@ class Notification_Scheduler {
             'ns-popup-script',
             NS_PLUGIN_URL . 'assets/js/popup.js',
             array('jquery'),
-            '1.0.3',
+            '1.0.4',
             true
         );
         
@@ -56,7 +56,7 @@ class Notification_Scheduler {
             'ns-popup-style',
             NS_PLUGIN_URL . 'assets/css/popup.css',
             array(),
-            '1.0.3.1'
+            '1.0.4'
         );
         
         // Add WooCommerce products if using WooCommerce template
